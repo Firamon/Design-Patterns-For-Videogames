@@ -1,7 +1,6 @@
 #include<iostream>
 #include<vector>
 #include<string>
-#include <conio.h>
 
 using namespace std;
 
@@ -30,6 +29,7 @@ class Player{
     private:
         string name;
     public:
+        float rotation;
         ILaneState *state;
         ILaneState *leftState;
         ILaneState *middleState;
@@ -54,6 +54,8 @@ class LeftLaneState : public ILaneState{
 
         void moveLeft() override {
             cout << "You can't go left from left lane" << endl;
+            cout << "Turn 90 degrees left" << endl;
+            player->rotation -= 90;
         }
 
         void moveRight() override {
@@ -96,18 +98,20 @@ class RightLaneState : public ILaneState{
 
         void moveLeft() override {
             cout << "Going middle from right lane" << endl;
-            player->state = player->leftState;
+            player->state = player->middleState;
         }
 
         void moveRight() override {
             cout << "You can't go right from right lane" << endl;
-            player->state = player->rightState;
+            cout << "Turn 90 degrees right" << endl;
+            player->rotation += 90;
         }
 
 };
 
 Player::Player(){
     name = "player";
+    rotation = 0;
     leftState = new LeftLaneState(this);
     middleState = new MiddleLaneState(this);
     rightState = new RightLaneState(this);
@@ -133,6 +137,7 @@ void listenKeyboardWindows(Player* player){
         }else if(key == "d"){
             player->moveRight();
         }
+        cout << "Player current rotation: " << player->rotation << endl;
     }
     return ;
 }
